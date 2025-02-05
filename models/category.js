@@ -1,9 +1,9 @@
-import sequelize from "../sequelizeConfig";
+import sequelize from "../sequelizeConfig.js";
 import { Model, DataTypes } from "sequelize";
 
-export class categoryModel extends Model{}
+export class Category extends Model{}
 
-categoryModel.init({
+Category.init({
     id:{
         type:DataTypes.INTEGER,
         autoIncrement:true,
@@ -14,10 +14,12 @@ categoryModel.init({
         type:DataTypes.STRING,
         allowNull:false,
         unique: true
-    }, 
-        sequelize,
-        modelName: 'category',
+    }}, 
+    {
+        sequelize, 
+        modelName: "category",
         underscored: true,
         freezeTableName: false,
-        timestamps: true
-    });
+        createdAt: true,
+        updatedAt: true,
+      });

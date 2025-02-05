@@ -1,9 +1,9 @@
-import sequelize from "../sequelizeConfig";
+import sequelize from "../sequelizeConfig.js";
 import { Model, DataTypes } from "sequelize";
 
-export class brandModel extends Model{}
+export class Brand extends Model{}
 
-brandModel.init({
+Brand.init({
     id:{
         type:DataTypes.INTEGER,
         allowNull:false,
@@ -20,9 +20,10 @@ brandModel.init({
         allowNull:false
     }},
     {sequelize,
-    modelName: 'brand',
+    modelName: "brand",
     underscored: true,
     freezeTableName: false,
-    timestamps: true
+    createdAt: true,
+    updatedAt: true,
     }
 )

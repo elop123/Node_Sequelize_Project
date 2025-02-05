@@ -1,6 +1,7 @@
 import sequelize from '../sequelizeConfig.js'
 import { Model, DataTypes } from 'sequelize'
 
+
 export class carModel extends Model{}
 
 carModel.init({
@@ -10,10 +11,7 @@ carModel.init({
         allowNull:false,
         primaryKey:true
     },
-    category:{
-        type:DataTypes.STRING,
-        allowNull:false
-    },
+    
     brand:{
         type:DataTypes.STRING,
         allowNull:false
@@ -32,7 +30,7 @@ carModel.init({
     },
     price:{
         type:DataTypes.DOUBLE,
-        allowNull:true,
+        allowNull:false,
         defaultValue:0.00
     },
     fueltype:{
@@ -41,9 +39,11 @@ carModel.init({
     }
 }, {
     sequelize,
-    modelName:'car',
+    modelName:"car",
     underscored:true,
     freezeTableName:false,
     createdAt:true,
     updatedAt:true
 })
+
+

@@ -1,15 +1,60 @@
 import express from 'express'
-import { carModel } from '../Models/carModel.js'
+import { carModel } from '../models/carModel.js'
 
 export const carController = express.Router()
 
-//Route to list
+//Route to list(Read)
 carController.get('/cars', async(req,res)=>{
-   console.log('Get list of cars');
-   res.send('Get list of cars')
+//console.log('Get list of cars');
+//res.send('get list')
+   try {
+       const data = await carModel.findAll({
+           attributes: ['brand', 'color']
+       })
+
+       if(!data || data.length === 0) {
+          return res.json({ message: 'No data found'})
+      }
+      res.json(data)
+  } catch (error) {
+      console.error(`Could not get car list: ${error}`)
+ }
 })
 
-//Route to details
+//Route to details (Read)
 carController.get('/cars/:id([0-9]*)', async(req,res)=>{
-    res.send(`Get details for record #{id}`);
- })
+   try {
+      const { id } = req.params
+      const data = await carModel.findOne({ where: { id: id },
+          attributes: ['brand', 'color']
+      })
+
+      if(!data) {
+          return res.json({ message: `Could not find car on id #${id}` })
+      }
+
+      return res.json(data);
+  
+  } catch (error) {
+      console.error(`Could not get car details: ${error}`)        
+  }
+})
+
+// Route to create (CREATE)
+carController.post('/cars', async (req, res) => {
+   const { brand, model, year, price, color , fueltype} = req.body;
+   
+   if(!brand || !model || !year || !price || !color || !fueltype ) {
+       return res.json({ message: 'Missing required data' })
+   }
+
+   try {
+       const result = await carModel.create({
+           brand, model, year, price, color, fueltype
+       })
+
+       res.status(201).json(result)
+   } catch (error) {
+       return res.json({ message: `Could not create car: ${error.message}`})
+   }
+})

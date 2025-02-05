@@ -2,9 +2,13 @@ import { Sequelize } from 'sequelize'
 import dotenv from 'dotenv'
 dotenv.config();
 
-// if(!process.env.DBNAME || !process.env.DBUSER || !process.env.DBPASSWORD || !process.env.DHBHOST)
-//    console.log('Error: Can not connect to database because of missing credentials');
-//    process.exit(true);
+// if
+// (!process.env.DBNAME ||
+//  !process.env.DBUSER || 
+//  !process.env.DBPASSWORD || 
+//  !process.env.DHBHOST){
+// console.log('Error: Can not connect to database because of missing credentials');
+// process.exit(1);}
    
 const sequelize= new Sequelize(
     process.env.DBNAME,
@@ -13,7 +17,7 @@ const sequelize= new Sequelize(
     {
         host: process.env.DBHOST,
         port: 3306,
-        // port:process.env.DBPORT || 3306,
+        //port:process.env.DBPORT || 3306,
         dialect:'mysql'
     }
 )
@@ -23,4 +27,4 @@ sequelize.authenticate()
   .catch(error => console.error(`Could not connect to database: ${error}`));
 
 
-export default sequelize
+export default sequelize;
