@@ -69,3 +69,26 @@ categoryController.put('/category', async(req, res)=>{
  })
 
 
+//Route til delete
+ categoryController.delete('/category/:id([0-9]*)', async(req, res)=>{
+  const { id } = req.params;
+  if (id) {
+    try {
+      await Category.destroy({
+        where: { id }
+      });
+      res.status(200).send({
+        message: `Item is deleted`
+      });
+    } catch (error) {
+      res.status(500).send({
+        message: `Could not delete: ${error.message}`
+      });
+    }
+  } else {
+    res.status(400).send({
+      message: "Id is not valid"
+    });
+  }
+});
+ 

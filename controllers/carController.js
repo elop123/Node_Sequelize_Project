@@ -9,7 +9,7 @@ carController.get('/cars', async(req,res)=>{
 //res.send('get list')
    try {
        const data = await carModel.findAll({
-           attributes: ['brand', 'color']
+           //attributes: ['brand', 'color']
        })
 
        if(!data || data.length === 0) {
@@ -59,8 +59,7 @@ carController.post('/cars', async (req, res) => {
    }
 })
 
-//
-
+//Route til update
 carController.put('/cars', async(req, res)=>{
     //console.log('Ready to update');
     const { id, brand, model, year, price, color , fueltype} = req.body;
@@ -81,4 +80,33 @@ carController.put('/cars', async(req, res)=>{
     }
  })
 
+ //Route til delete
+ carController.delete('/cars/:id([0-9]*)', async(req, res)=>{
+    // Henter ID fra URL-parametrene
+  const { id } = req.params;
+  // Tjekker om et ID er angivet
+  if (id) {
+    try {
+      // Forsøger at slette bilen fra databasen baseret på ID
+      await carModel.destroy({
+        where: { id }
+      });
+      // Returnerer succesbesked
+      res.status(200).send({
+        message: `Item is deleted`
+      });
+    } catch (error) {
+      // Send en HTTP-statuskode 500 hvis der opstår en fejl
+      res.status(500).send({
+        message: `Could not delete: ${error.message}`
+      });
+    }
+  } else {
+    // Sender 400 Bad Request-fejl hvis ID er ugyldigt 
+    res.status(400).send({
+      message: "Id is not valid"
+    });
+  }
+});
+ 
     
