@@ -1,5 +1,5 @@
 import express from "express";
-import { Brand } from "../models/brand.js";
+import { Brand } from "../models/brandModel.js";
 
 export const brandController = express.Router();
 
@@ -14,25 +14,61 @@ brandController.get("/brand", async (req, res) => {
   }
 });
 
-brandController.get("/brand/:id([0-9]*)", async (req, res) => {
-    try {
-      const id = parseInt(req.params.id, 10);
-  
-      let result = await Brand.findOne({
-        where: { id: id },
-      });
-  
-      if (!result) {
-        return res
-          .status(404)
-          .json({ message: `Bran with id ${id} is not found` });
-      }
-      res.json(result);
-    } catch (error) {
-      res.status(500).json({
-        message: `Error to fetch brand: ${error.message}`,
-      });
+// Route to get a single brand by ID
+brandController.get("/brand/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const brand = await Brand.findOne({ where: { id } });
+
+    if (!brand) {
+      return res.status(404).json({ message: "Brand not found" });
     }
-  });
+
+    res.status(200).json(brand);
+  } catch (error) {
+    console.error("Error fetching brand:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Route to create a new brand
+brandController.post("/brand", async (req, res) => {
+  const { name, logo } = req.body;
+
+  if (!name || !logo ) {
+    return res.status(400).json({ message: "Name is required" });
+  }
+  try {
+    const newBrand = await Brand.create({ name, logo});
+    res.status(201).json({ message: "Brand created successfully", brand: newBrand });
+  } catch (error) {
+    console.error("Error creating brand:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+//Route to update
+brandController.put('/brand', async(req, res)=>{
+    //console.log('Ready to update');
+    const { name, logo, id } = req.body;
+   
+    if(!id || !name || !logo) {
+        return res.status(400).json({ message: 'Missing required data' });
+    }
+    try {
+        const result = await Brand.update({
+            name, logo
+        }, {where:{id}})
+        if (result === 0) {
+            return res.status(404).json({ message: 'Brand not found or no changes made' });
+        }
+        return res.status(200).json({ message: 'Brand updated successfully' });
+      } catch (error) {
+          return res.json({ message: `Could not update brand: ${error.message}`})
+      }
+   })
+  
+
 
 

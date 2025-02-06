@@ -20,6 +20,5 @@ Category.init({
         modelName: "category",
         underscored: true,
         freezeTableName: false,
-        createdAt: true,
-        updatedAt: true,
+        
       });

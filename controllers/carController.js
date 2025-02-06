@@ -58,3 +58,27 @@ carController.post('/cars', async (req, res) => {
        return res.json({ message: `Could not create car: ${error.message}`})
    }
 })
+
+//
+
+carController.put('/cars', async(req, res)=>{
+    //console.log('Ready to update');
+    const { id, brand, model, year, price, color , fueltype} = req.body;
+   
+    if(!brand || !model || !year || !price || !color || !fueltype ||!id ) {
+        return res.status(400).json({ message: 'Missing required data' });
+    }
+    try {
+        const result = await carModel.update({
+            brand, model, year, price, color, fueltype
+        }, {where:{id}})
+        if (result === 0) {
+            return res.status(404).json({ message: 'Car not found or no changes made' });
+        }
+        return res.status(200).json({ message: 'Car updated successfully' });
+    } catch (error) {
+        return res.json({ message: `Could not update car: ${error.message}`})
+    }
+ })
+
+    
