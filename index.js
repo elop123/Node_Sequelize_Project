@@ -5,6 +5,7 @@ import { dbController } from './controllers/dbController.js';
 import { carController } from './controllers/carController.js'; 
 import {categoryController} from './controllers/categoryController.js';
 import { brandController } from './controllers/brandController.js';
+import { userController } from './controllers/userController.js';
 
 dotenv.config();
 
@@ -39,6 +40,7 @@ app.use(dbController);
 app.use(carController);
 app.use(categoryController);
 app.use(brandController);
+app.use(userController);
 
 // 404 Route
 app.get('*', (req, res) => {
