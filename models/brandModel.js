@@ -1,9 +1,9 @@
 import sequelize from "../sequelizeConfig.js";
 import { Model, DataTypes } from "sequelize";
 
-export class Brand extends Model{}
+export class brandModel extends Model{}
 
-Brand.init({
+brandModel.init({
     id:{
         type:DataTypes.INTEGER,
         allowNull:false,

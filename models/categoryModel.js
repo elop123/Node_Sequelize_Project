@@ -1,9 +1,9 @@
 import sequelize from "../sequelizeConfig.js";
 import { Model, DataTypes } from "sequelize";
 
-export class Category extends Model{}
+export class categoryModel extends Model{}
 
-Category.init({
+categoryModel.init({
     id:{
         type:DataTypes.INTEGER,
         autoIncrement:true,

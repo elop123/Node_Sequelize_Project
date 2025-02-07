@@ -1,12 +1,12 @@
 import express from "express";
-import { Brand } from "../models/brandModel.js";
+import { brandModel } from "../models/brandModel.js";
 
 export const brandController = express.Router();
 
 // Route to get all brands
 brandController.get("/brand", async (req, res) => {
   try {
-    const brands = await Brand.findAll();
+    const brands = await brandModel.findAll();
     res.status(200).json(brands);
   } catch (error) {
     console.error("Error fetching brand:", error);
@@ -19,7 +19,7 @@ brandController.get("/brand/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
-    const brand = await Brand.findOne({ where: { id } });
+    const brand = await brandModel.findOne({ where: { id } });
 
     if (!brand) {
       return res.status(404).json({ message: "Brand not found" });
@@ -40,7 +40,7 @@ brandController.post("/brand", async (req, res) => {
     return res.status(400).json({ message: "Name is required" });
   }
   try {
-    const newBrand = await Brand.create({ name, logo});
+    const newBrand = await brandModel.create({ name, logo});
     res.status(201).json({ message: "Brand created successfully", brand: newBrand });
   } catch (error) {
     console.error("Error creating brand:", error);
@@ -57,7 +57,7 @@ brandController.put('/brand', async(req, res)=>{
         return res.status(400).json({ message: 'Missing required data' });
     }
     try {
-        const result = await Brand.update({
+        const result = await brandModel.update({
             name, logo
         }, {where:{id}})
         if (result === 0) {
@@ -74,7 +74,7 @@ brandController.put('/brand', async(req, res)=>{
   const { id } = req.params;
   if (id) {
     try {
-      await Brand.destroy({
+      await brandModel.destroy({
         where: { id }
       });
       res.status(200).send({

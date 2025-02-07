@@ -1,16 +1,42 @@
 import express from 'express'
 import { carModel } from '../models/carModel.js'
+import { brandModel } from '../models/brandModel.js'
+import { categoryModel} from '../models/categoryModel.js'
 
 export const carController = express.Router()
 
+// Relations beteween carModel & brandModel
+carModel.belongsTo(brandModel, {
+  foreignKey: {
+      allowNull: false
+  }
+})
+brandModel.hasMany(carModel)
+
+carModel.belongsTo(categoryModel, {
+  foreignKey: {
+      allowNull: false
+  }
+})
+
+categoryModel.hasMany(carModel);
+
 //Route to list(Read)
 carController.get('/cars', async(req,res)=>{
-//console.log('Get list of cars');
 //res.send('get list')
    try {
        const data = await carModel.findAll({
-           //attributes: ['brand', 'color']
-       })
+        include: [
+          {
+              model: brandModel,
+              //attributes: ['name', 'logo', 'id']
+          },
+          {
+              model: categoryModel,
+              attributes: ['name', 'id']
+          }
+      ]
+   });
 
        if(!data || data.length === 0) {
           return res.json({ message: 'No data found'})
@@ -26,7 +52,16 @@ carController.get('/cars/:id([0-9]*)', async(req,res)=>{
    try {
       const { id } = req.params
       const data = await carModel.findOne({ where: { id: id },
-          attributes: ['brand', 'color']
+        include: [
+          {
+              model: brandModel,
+              attributes: ['name', 'logo', 'id']
+          },
+          {
+              model: categoryModel,
+              attributes: ['name', 'id']
+          }
+      ]
       })
 
       if(!data) {
@@ -42,15 +77,15 @@ carController.get('/cars/:id([0-9]*)', async(req,res)=>{
 
 // Route to create (CREATE)
 carController.post('/cars', async (req, res) => {
-   const { brand, model, year, price, color , fueltype} = req.body;
+   const { brandId, categoryId, model, year, price, color , fueltype} = req.body;
    
-   if(!brand || !model || !year || !price || !color || !fueltype ) {
+   if(!brandId || !categoryId || !model || !year || !price || !color || !fueltype ) {
        return res.json({ message: 'Missing required data' })
    }
 
    try {
        const result = await carModel.create({
-           brand, model, year, price, color, fueltype
+          brandId, model, year, price, color, fueltype, categoryId
        })
 
        res.status(201).json(result)
@@ -62,16 +97,16 @@ carController.post('/cars', async (req, res) => {
 //Route til update
 carController.put('/cars', async(req, res)=>{
     //console.log('Ready to update');
-    const { id, brand, model, year, price, color , fueltype} = req.body;
+    const { id, model, year, price, color , fueltype, brandId, categoryId} = req.body;
    
-    if(!brand || !model || !year || !price || !color || !fueltype ||!id ) {
+    if( !brandId || !categoryId || !model || !year || !price || !color || !fueltype ||!id ) {
         return res.status(400).json({ message: 'Missing required data' });
     }
     try {
         const result = await carModel.update({
-            brand, model, year, price, color, fueltype
+           model, year, price, color, fueltype, brandId, categoryId
         }, {where:{id}})
-        if (result === 0) {
+        if (result[0] === 0) {
             return res.status(404).json({ message: 'Car not found or no changes made' });
         }
         return res.status(200).json({ message: 'Car updated successfully' });

@@ -26,7 +26,7 @@ app.get("/", (req, res) => {
 // Sync Route
 app.get('/sync', async (req, res) => {
     try {
-        await sequelize.sync({ alter: true }); // { force:true } will drop all tables
+        await sequelize.sync({ force: true }); // { force:true } will drop all tables
         res.send('Data successfully synchronized');
     } catch (err) {
         console.error('Error syncing database:', err);

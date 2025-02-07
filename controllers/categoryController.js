@@ -1,12 +1,12 @@
 import express from "express";
-import { Category } from "../models/categoryModel.js"; 
+import { categoryModel } from "../models/categoryModel.js"; 
 
 export const categoryController = express.Router();
 
 // Route to get all categories
 categoryController.get("/category", async (req, res) => {
     try {
-        const categories = await Category.findAll();
+        const categories = await categoryModel.findAll();
         res.status(200).json(categories);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -18,7 +18,7 @@ categoryController.get("/category/:id", async (req, res) => {
     const { id } = req.params;
 
     try {
-        const category = await Category.findOne({ where: { id } });
+        const category = await categoryModel.findOne({ where: { id } });
 
         if (!category) {
             return res.status(404).json({ message: "Category not found" });
@@ -39,7 +39,7 @@ categoryController.post("/category", async (req, res) => {
     return res.status(400).json({ message: "Name is required" });
   }
   try {
-    const newcategory = await Category.create({ name });
+    const newcategory = await categoryModel.create({ name });
     res.status(201).json({ message: "Category created successfully" });
   } catch (error) {
     console.error("Error creating category:", error);
@@ -56,7 +56,7 @@ categoryController.put('/category', async(req, res)=>{
         return res.status(400).json({ message: 'Missing required data' });
     }
     try {
-        const result = await Category.update({
+        const result = await categoryModel.update({
             name
         }, {where:{id}})
         if (result === 0) {
@@ -74,7 +74,7 @@ categoryController.put('/category', async(req, res)=>{
   const { id } = req.params;
   if (id) {
     try {
-      await Category.destroy({
+      await categoryModel.destroy({
         where: { id }
       });
       res.status(200).send({
