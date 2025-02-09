@@ -1,11 +1,13 @@
 import express from 'express'
-import { userModel } from '../models/userModel.js'
+import {userModel} from '../models/userModel.js'
 
 export const userController = express.Router()
 
 userController.get("/users", async (req, res) => {
     try {
-      const data = await userModel.findAll();
+      const data = await userModel.findAll({
+        attributes:['id', 'firstname', 'lastname']
+      });
       if (!data || data.length === 0) {
         return res.status(404).json({ message: "No data found" });
       }
